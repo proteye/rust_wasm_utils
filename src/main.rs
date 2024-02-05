@@ -1,12 +1,14 @@
+mod utils;
+
 use base64::prelude::*;
-use rust_wasm_utils::utils::{decrypt, encrypt, resize};
 use std::str::from_utf8;
 
-extern crate rust_wasm_utils;
+use utils::crypto::{decrypt, encrypt};
+use utils::image::resize_file;
 
 fn main() {
     // Image resize
-    resize(
+    resize_file(
         "./data/nasa-4928x3279.png",
         "./data/nasa-1024x768.png",
         1024,
@@ -36,7 +38,7 @@ fn main() {
     let cipher_message = BASE64_STANDARD.encode(&ciphertext);
     let decrypted_message = from_utf8(decrypted.as_slice()).unwrap();
 
-    assert_eq!(cipher_message, "bBGDU5xv1L1+7hqe8rG6KQ==");
+    assert_eq!(cipher_message, "LJgNJAMPTobsKO1hHSKHtg==");
     assert_eq!(plaintext, decrypted_message);
 
     println!("Ciphertext: {:?}", cipher_message);
