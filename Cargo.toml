@@ -1,0 +1,13 @@
+[package]
+name = "rust_wasm_utils"
+version = "0.1.0"
+authors = ["Ramil Zaynetdinov <ramil.zv@gmail.com>"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+base64 = "0.21.7"
+fast_image_resize = "3.0.1"
+image = "0.24.8"
+rust-crypto = "0.2.36"
