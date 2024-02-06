@@ -1,12 +1,12 @@
 extern crate image;
 
 use std::fs::File;
-use std::io::BufWriter;
+use std::io::{BufWriter, Cursor};
 use std::num::NonZeroU32;
 
 use image::codecs::png::PngEncoder;
 use image::io::Reader as ImageReader;
-use image::{load_from_memory_with_format, ColorType, ImageEncoder};
+use image::{ColorType, ImageEncoder};
 
 use fast_image_resize as fr;
 
@@ -59,11 +59,23 @@ pub fn resize_file(src_path: &str, dst_path: &str, dst_width: u32, dst_height: u
         .unwrap();
 }
 
-pub fn resize_image(data: &[u8], dst_width: u32, dst_height: u32) -> Vec<u8> {
+pub fn resize_image(data: Vec<u8>, dst_width: u32, dst_height: u32) -> Vec<u8> {
     // Read source image from file
-    let img = load_from_memory_with_format(data, image::ImageFormat::Png).unwrap();
+    let src_size = data.len();
+    let img = ImageReader::new(Cursor::new(data))
+        .with_guessed_format()
+        .unwrap()
+        .decode()
+        .unwrap();
+    // let img = load_from_memory_with_format(Cursor::new(data), image::ImageFormat::Png).unwrap();
     let width = NonZeroU32::new(img.width()).unwrap();
     let height = NonZeroU32::new(img.height()).unwrap();
+    log::info!(
+        "SRC_IMAGE: width: {}, height: {}, size: {}",
+        width,
+        height,
+        src_size,
+    );
     let mut src_image = fr::Image::from_vec_u8(
         width,
         height,
@@ -85,7 +97,7 @@ pub fn resize_image(data: &[u8], dst_width: u32, dst_height: u32) -> Vec<u8> {
     let mut dst_image = fr::Image::new(dst_width, dst_height, src_image.pixel_type());
 
     // Get mutable view of destination image data
-    let mut dst_view = dst_image.view_mut();
+    let mut dst_view: fr::DynamicImageViewMut<'_> = dst_image.view_mut();
 
     // Create Resizer instance and resize source image
     // into buffer of destination image
@@ -95,8 +107,10 @@ pub fn resize_image(data: &[u8], dst_width: u32, dst_height: u32) -> Vec<u8> {
     // Divide RGB channels of destination image by alpha
     alpha_mul_div.divide_alpha_inplace(&mut dst_view).unwrap();
 
-    // Write destination image as PNG-file
-    let mut result_buf = BufWriter::new(Vec::new());
+    // Write destination image as PNG format
+    // let mut result_buf = Cursor::new(Vec::new());
+    // let mut result_buf: BufWriter<Vec<u8>> = BufWriter::new(Vec::new());
+    let mut result_buf = Vec::new();
     PngEncoder::new(&mut result_buf)
         .write_image(
             dst_image.buffer(),
@@ -105,6 +119,12 @@ pub fn resize_image(data: &[u8], dst_width: u32, dst_height: u32) -> Vec<u8> {
             ColorType::Rgba8,
         )
         .unwrap();
+    log::info!(
+        "DST_IMAGE: width: {}, height: {}, size: {}",
+        dst_width,
+        dst_height,
+        result_buf.len(),
+    );
 
-    return result_buf.buffer().to_vec();
+    return result_buf;
 }

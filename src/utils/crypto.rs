@@ -1,13 +1,14 @@
 extern crate crypto;
 
-use crypto::blockmodes;
 use crypto::aes::{cbc_decryptor, cbc_encryptor, KeySize};
+use crypto::blockmodes;
 use crypto::buffer::{BufferResult, ReadBuffer, RefReadBuffer, RefWriteBuffer, WriteBuffer};
 
 use std::error::Error;
 
-pub fn encrypt(key: &[u8], plaintext: &[u8]) -> Result<Vec<u8>, Box<dyn Error>> {
-    let mut encryptor = cbc_encryptor(KeySize::KeySize256, key, &[0; 16], blockmodes::PkcsPadding);
+pub fn encrypt(key: &str, plaintext: &[u8]) -> Result<Vec<u8>, Box<dyn Error>> {
+    let key = get_valid_key(key);
+    let mut encryptor = cbc_encryptor(KeySize::KeySize256, &key, &[0; 16], blockmodes::PkcsPadding);
 
     let mut ciphertext = Vec::new();
     let mut read_buffer = RefReadBuffer::new(plaintext);
@@ -36,8 +37,9 @@ pub fn encrypt(key: &[u8], plaintext: &[u8]) -> Result<Vec<u8>, Box<dyn Error>> 
     Ok(ciphertext)
 }
 
-pub fn decrypt(key: &[u8], ciphertext: &[u8]) -> Result<Vec<u8>, Box<dyn Error>> {
-    let mut decryptor = cbc_decryptor(KeySize::KeySize256, key, &[0; 16], blockmodes::PkcsPadding);
+pub fn decrypt(key: &str, ciphertext: &[u8]) -> Result<Vec<u8>, Box<dyn Error>> {
+    let key = get_valid_key(key);
+    let mut decryptor = cbc_decryptor(KeySize::KeySize256, &key, &[0; 16], blockmodes::PkcsPadding);
 
     let mut plaintext = Vec::new();
     let mut read_buffer = RefReadBuffer::new(ciphertext);
@@ -64,4 +66,20 @@ pub fn decrypt(key: &[u8], ciphertext: &[u8]) -> Result<Vec<u8>, Box<dyn Error>>
     }
 
     Ok(plaintext)
+}
+
+/// Gets a valid key. This must be exactly 32 bytes.
+/// If less than 32 bytes, it will be padded with 0.
+/// If more than 32 bytes, it will be truncated
+fn get_valid_key(key: &str) -> Vec<u8> {
+    let mut bytes = key.as_bytes().to_vec();
+    if bytes.len() < 32 {
+        for _ in 0..(32 - bytes.len()) {
+            bytes.push(0x00);
+        }
+    } else if bytes.len() > 32 {
+        bytes = bytes[0..32].to_vec();
+    }
+
+    bytes
 }

@@ -16,7 +16,7 @@ fn main() {
     );
 
     // Message encrypt and decrypt
-    let key = b"abcdefghijklmnop";
+    let key = "abcdefghijklmnop";
     let plaintext = "Hello, world!";
 
     let ciphertext = match encrypt(key, plaintext.as_bytes()) {
@@ -38,7 +38,7 @@ fn main() {
     let cipher_message = BASE64_STANDARD.encode(&ciphertext);
     let decrypted_message = from_utf8(decrypted.as_slice()).unwrap();
 
-    assert_eq!(cipher_message, "LJgNJAMPTobsKO1hHSKHtg==");
+    assert_eq!(cipher_message, "MTHcnuDfOf5DKrequCeHCw==");
     assert_eq!(plaintext, decrypted_message);
 
     println!("Ciphertext: {:?}", cipher_message);

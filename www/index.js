@@ -1,41 +1,16 @@
-// import * as wasm from "rust_wasm_utils";
-
-// wasm.greet();
-
 const js = import("rust_wasm_utils/rust_wasm_utils.js");
 
-js.then((js) => {
-  // js.greet("WASM");
-  const result = js.sum(1, 2);
-  // js.aesEncrypt("password", "Hello, world!");
-  // js.imageResize([], 1024, 768);
-  console.log(result);
+js.then(async (js) => {
+  const encrypted = js.aesEncrypt("password", "Hello, world!");
+  const decrypted = js.aesDecrypt("password", encrypted);
+  let srcImage = await fetch("./nasa-1024x768.png", {
+    referrer: "",
+  }).then((r) => r.arrayBuffer()); // empty referrer header because imgur blocks requests from 127.0.0.1
+  document.getElementById("src-img").src = URL.createObjectURL(
+    new Blob([srcImage], { type: "image/png" })
+  );
+  const dstImage = js.imageResize(new Uint8Array(srcImage), 640, 480);
+  document.getElementById("resized-img").src = URL.createObjectURL(
+    new Blob([dstImage.buffer], { type: "image/png" })
+  );
 });
-
-// var Module = {};
-// fetch("./lib/rust_wasm_utils_bg.wasm")
-//   .then((response) => response.arrayBuffer())
-//   .then((buffer) => {
-//     Module.wasmBinary = buffer;
-//     const script = document.createElement("script");
-//     script.src = "./lib/rust_wasm_utils.js";
-//     document.body.appendChild(script);
-//   });
-
-// WebAssembly.instantiateStreaming(fetch("./lib/rust_wasm_utils_bg.wasm")).then(
-//   (wasmModule) => {
-//     // this saves the exported function from WASM module for use in JS
-//     wasm_greet = wasmModule.instance.exports.greet;
-//   }
-// );
-
-// import { greet, default as init } from "./lib/rust_wasm_utils.js";
-
-// async function run() {
-//   await init("./lib/rust_wasm_utils_bg.wasm");
-
-//   // make the function available to the browser
-//   window.greet = greet;
-// }
-
-// run();
