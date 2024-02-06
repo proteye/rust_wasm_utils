@@ -17,6 +17,11 @@ pub fn greet(name: &str) {
     alert(&format!("Hello, {}!", name));
 }
 
+#[wasm_bindgen]
+pub fn sum(x: i32, y: i32) -> i32 {
+    return x + y;
+}
+
 #[wasm_bindgen(js_name = aesEncrypt)]
 pub fn aes256_encrypt(key: &str, plaintext: &str) -> Vec<u8> {
     let encrypted = match encrypt(key.as_bytes(), plaintext.as_bytes()) {
