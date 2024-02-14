@@ -1,0 +1,19 @@
+{
+  "name": "rust_wasm_utils",
+  "collaborators": [
+    "Ramil Zaynetdinov <ramil.zv@gmail.com>"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "rust_wasm_utils_bg.wasm",
+    "rust_wasm_utils.js",
+    "rust_wasm_utils_bg.js",
+    "rust_wasm_utils.d.ts"
+  ],
+  "module": "rust_wasm_utils.js",
+  "types": "rust_wasm_utils.d.ts",
+  "sideEffects": [
+    "./rust_wasm_utils.js",
+    "./snippets/*"
+  ]
+}
