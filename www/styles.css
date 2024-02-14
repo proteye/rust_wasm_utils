@@ -1,0 +1,12 @@
+body {
+  background: white;
+  font-size: 16px;
+}
+
+form {
+  margin: 32px;
+}
+
+input {
+  margin: 8px 0 8px;
+}

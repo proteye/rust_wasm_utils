@@ -34,7 +34,7 @@ pub fn aes256_encrypt(key: &str, plaintext: &str) -> Vec<u8> {
     };
 
     let cipher_message = BASE64_STANDARD.encode(&encrypted);
-    log::info!("ENCRYPTED: {}", cipher_message);
+    log::info!("ENCRYPTED size: {}", cipher_message.len());
 
     return encrypted;
 }
@@ -55,7 +55,7 @@ pub fn aes256_decrypt(key: &str, ciphertext: &[u8]) -> String {
     };
 
     let decrypted_message = from_utf8(decrypted.as_slice()).unwrap();
-    log::info!("DECRYPTED: {}", decrypted_message);
+    log::info!("DECRYPTED size: {}", decrypted_message.len());
 
     return decrypted_message.to_string();
 }

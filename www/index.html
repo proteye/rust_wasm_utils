@@ -4,16 +4,45 @@
 <head>
     <meta charset="utf-8" />
     <title>Rust Wasm Utils</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 
 <body>
     <script src="./index.js"></script>
     <h1>Rust Wasm Utils</h1>
+    <h2>Ресайз изображения</h2>
     <div>
-        <img id="src-img" />
+        <form id="resize">
+            <input id="image" type="file" name="image" />
+            <span>Ширина:</span>
+            <input id="width" type="text" name="width" value="320" />
+            <span>Высота:</span>
+            <input id="height" type="text" name="height" value="240" />
+            <button id="resize-submit" type="submit">Ресайз</button>
+        </form>
     </div>
     <div>
-        <img id="resized-img" />
+        <a id="dst-img-link" download>
+            <img id="dst-img" />
+        </a>
+    </div>
+
+    <h2>Шифрование файла</h2>
+    <div>
+        <form id="encrypt">
+            <input id="textFile" type="file" name="textFile" />
+            <span>Пароль:</span>
+            <input id="password" type="text" name="password" value="swordfish" />
+            <button id="btn-encrypt" type="button">Зашифровать</button>
+            <button id="btn-decrypt" type="button">Расшифровать</button>
+        </form>
+    </div>
+    <div>
+        <a id="encrypted" download></a>
+    </div>
+    <br />
+    <div>
+        <a id="decrypted" download></a>
     </div>
 </body>
 
