@@ -8,6 +8,7 @@
 </head>
 
 <body>
+    <script src="./sjcl.js"></script>
     <script src="./index.js"></script>
     <h1>Rust Wasm Utils</h1>
     <h2>Ресайз изображения</h2>
@@ -33,8 +34,12 @@
             <input id="textFile" type="file" name="textFile" />
             <span>Пароль:</span>
             <input id="password" type="text" name="password" value="swordfish" />
-            <button id="btn-encrypt" type="button">Зашифровать</button>
-            <button id="btn-decrypt" type="button">Расшифровать</button>
+            <span>|</span>
+            <button id="btn-encrypt" type="button">Зашифровать WASM</button>
+            <button id="btn-encrypt-js" type="button">Зашифровать JS</button>
+            <span>|</span>
+            <button id="btn-decrypt" type="button">Расшифровать WASM</button>
+            <button id="btn-decrypt-js" type="button">Расшифровать JS</button>
         </form>
     </div>
     <div>
