@@ -196,7 +196,10 @@ js.then(async (js) => {
     console.time("Encrypt JS");
     // const aes = sjcl.cipher.aes("qwerasdf");
     // const encryptedBytes = aes.encrypt(text);
-    const encryptedBytes = sjcl.encrypt(password, text);
+    const encryptedBytes = sjcl.encrypt(password, text, {
+      cipher: "aes",
+      ks: 256,
+    });
     console.timeEnd("Encrypt JS");
     console.info("ENCRYPTED size:", Buffer.byteLength(encryptedBytes, "utf8"));
 
@@ -238,7 +241,10 @@ js.then(async (js) => {
     console.time("Decrypt JS");
     // const aes = sjcl.cipher.aes("qwerasdf");
     // const encryptedBytes = aes.decrypt(text);
-    const decrypted = sjcl.decrypt(password, cipher);
+    const decrypted = sjcl.decrypt(password, cipher, {
+      cipher: "aes",
+      ks: 256,
+    });
     console.timeEnd("Decrypt JS");
     console.info("DECRYPTED size:", Buffer.byteLength(decrypted, "utf8"));
 
